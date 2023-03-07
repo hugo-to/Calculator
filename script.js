@@ -33,19 +33,18 @@ class Calculator {
     }
 
     appendDigit(digit){
-        // allow only one decimal separator 
-        if(digit === '.' && this.currentOperand.includes('.')) return;
 
-        // if the first digit is a decimal separator, add a zero to the left 
-        if(digit === '.' && this.currentOperand === '') 
-        this.currentOperand = '0' + this.currentOperand;
+        // reject inputs that render the operand invalid (multiple decimal points)
+        if ( digit === '.' && this.currentOperand.includes('.') ) return;
 
-        // if the first digit is a zero, don't allow any more zeros
-                if ( digit === '0' && this.currentOperand === '0' ) return;
+        // if digir is zero,  do not allow multiple initial zeroes 
+        if ( digit === '0' && this.currentOperand === '0' ) return; 
 
-        // append the digit
-        this.currentOperand = this.currentOperand + digit;
+        // if digit is '.' and there are no prior digits, add a zero
+        if ( digit === '0' && this.currentOperand === '' ) this.currentOperand = '0'; 
 
+        // clean unnecessary zeroes when appendeing
+        this.currentOperand += digit;
     }
 
     selectOperator(){
@@ -73,7 +72,7 @@ const calculator = new Calculator(previousOperandTextElement, currentOperandText
 // event listeners
 
 allClearButton.addEventListener('click', button => {
-    calculator.allClear();
+    calculator.allClear(); // TOD O 
     calculator.updateDisplay();
 })
 
