@@ -17,13 +17,13 @@ class Calculator {
         this.previousOperandTextElement = previousOperandTextElement;
         this.currentOperandTextElement = currentOperandTextElement;
 
+        this.allClear();
+    }
+    
+    allClear ( ) {
         this.previousOperand = "";
         this.currentOperand = "";
         this.operation = undefined;
-
-    }
-
-    allClear ( ) {
 
     }
 
@@ -47,16 +47,25 @@ class Calculator {
         this.currentOperand += digit;
     }
 
-    selectOperator(){
+    selectOperator(operation) {
+        if (this.currentOperand === '') return;
+        if (this.previusOperand !== '') this.calculate();
 
+        this.operation = operation; 
+        this.previousOperand = this.currentOperand;
+        this.currentOperand = '';
     }
 
     calculate(){
-
+        console.log("calcular!!!");
     }
 
     updateDisplay(){
         this.currentOperandTextElement.innerText = this.currentOperand;
+
+        if (this.previousOperand !== '') {
+            this.previousOperandTextElement.innerText = `${this.previousOperand}  ${this.operation}`;
+    }
     }
 
     getOperandFromDisplay(){
@@ -90,7 +99,12 @@ numberButtons.forEach(button => {
     })
 })
 
-
+operatorButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.selectOperator(button.innerText);
+        calculator.updateDisplay();
+    })                                                                                                               
+})
 
 //
 
