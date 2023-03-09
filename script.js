@@ -47,9 +47,16 @@ class Calculator {
         this.currentOperand += digit;
     }
 
-    selectOperator(operation) {
+    selectOperation(operation) {
+        if (this.currentOperand === '' && operation === '-') {
+            this.appendDigit(operation);
+            return; 
+        }
+
         if (this.currentOperand === '') return;
+        
         if (this.previusOperand !== '') this.calculate();
+
 
         this.operation = operation; 
         this.previousOperand = this.currentOperand;
@@ -57,21 +64,54 @@ class Calculator {
     }
 
     calculate(){
-        console.log("calcular!!!");
+        let result;
+        const prev = parseFloat(this.previousOperand);
+        const current = parseFloat(this.currentOperand);
+
+        if ( isNaN(prev) || isNaN(current)) return; 
+        // if (!isNaN(prev) && current === 0 ) return; 
+
+        switch (this.operation) { 
+            case '÷':
+                result = prev / current;
+                break;
+            case '*':
+                result = prev * current;
+                break;
+            case '+':
+                result = prev + current;
+                break;
+            case '-':
+                result = prev - current;
+                break;
+            default: 
+                return; 
+        }
+
+        this.currentOperand = result.toString()
+        this.operation = undefined;
+        this.previousOperand = ''; 
+
     }
 
     updateDisplay(){
         this.currentOperandTextElement.innerText = this.currentOperand;
-
-        if (this.previousOperand !== '') {
+        if (this. operation != undefined) {
             this.previousOperandTextElement.innerText = `${this.previousOperand}  ${this.operation}`;
-    }
+        } else {
+            this.previousOperandTextElement.innerText = '';
+        };
+
+    //     if (this.previousOperand !== '') {
+    // }
     }
 
-    getOperandFromDisplay(){
+    // getOperandFromDisplay(){
 
-    }
-} /* class calculator */
+    // }
+}
+
+/* class calculator */
 
 
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement); 
@@ -101,11 +141,14 @@ numberButtons.forEach(button => {
 
 operatorButtons.forEach(button => {
     button.addEventListener('click', () => {
-        calculator.selectOperator(button.innerText);
+        calculator.selectOperation(button.innerText);
         calculator.updateDisplay();
     })                                                                                                               
 })
 
 //
 
-
+equalsButton.addEventListener('click', () => {
+    calculator.calculate();
+    calculator.updateDisplay();
+})
